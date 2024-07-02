@@ -46,16 +46,24 @@ Texts can be of three types:
 
 TBD, but most probably a `.json` file per text containing all the annotations in a format that can be ingested by Pecha's db.
 
-## Pipeline Steps and Rationale
+## Overall Pipeline Description
 
-### Order of Precedence and Rationale
+When a text traverses the pipeline, each annotation pipe:
+- applies tags to the relevant segments of the text and
+- narrows down the areas on which the subsequent annotation tasks should be performed.
 
-Annotation pipes should be traversed in the order defined below in order to ensure best tagging results for each annotation and minimize false positives.
+Once the pipeline has been completely traversed, the text in its initial state is published on Pecha.org and the process of quality control can start. 
 
-#### texts with depth 0:
+One after another, human annotators will review and improve the annotations of each pipe. At the completion of each quality control, the human-reviewed data is fed through the subsequent pipes and a new version of the text is published. Each publication carries with it the status of the text: first stating it has gone through the automatic pipeline, then adding to its status each pipe reviewed by human annotators. When review process is completed, the text complies to Pecha.org's expectations and can be published without notifying the user of its status.
+
+### Order of Pipes and Rationale
+
+Annotation pipes should be traversed in the order defined below in order to ensure best tagging results for each annotation and minimize false positives during the annotation tasks.
+
+#### SUB-PIPELINE 1: Texts with depth 0
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**1.** sentence segmentation
 
-#### texts with depth 1:
+#### SUB-PIPELINE 2: Texts with depth 1
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**1.** sapche boundary detection
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**2.** sentence segmentation
@@ -64,7 +72,7 @@ Rationale:
 - the sapche (outline) delimits the meaningful sections of a text. Thus, a sentence necessarily stops where a sapche begins. 
 - sapches follow strict structural patterns that don't correspond to sentence boundaries. Thus, a sentence tokenizer could consider them part of a sentence, or even add a sentence break in its middle. Furthermore, giving smaller chunks of raw text to a sentence tokenizer yields a better segmentation.
 
-#### texts with depth > 2:
+#### SUB-PIPELINE 3: Texts with depth >= 2
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**1.** sapche boundary detection
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**2.** citation detection
@@ -80,14 +88,19 @@ Rationale:
 Rationale:
 - since sapches (**1.**) establish the structure of the text, they take precedence over any other segmentation. Nothing overrides them and their content can't be anything else but sapche content. This is why this pipe is placed first.
 - citations (**2.**) are always separate segments, unless they only span a few syllables. Modern book publications of Tibetan texts always place them in separate paragraphs and indent them. We follow this convention that allows the reader to either spend time analyzing the citation, or to quickly move over to the next part of the author's argumentation. Citations may occur at similar locations within sections of a text (either beginning, or end, or middle, etc.), so having clearly delimited sections when detecting citations makes human quality control easier and more consistent.
-- root-text citations (**3.**) are essentially regular citations and are treated similarly, although they should have a slightly different formatting (colors, etc.) to highlight their special status. Having text sections already delimited and visually identifying the places inside sections where citations are found makes it easier for human quality control to look where root-text citations are expected.
+- root-text citations (**3.**) are essentially regular citations and are treated similarly, although they should have a slightly different formatting (colors, etc.) to highlight their special status. Having text sections already delimited and visually identifying the places inside sections where citations are found makes it easier for human quality control to identify the places where root-text citations are expected.
 - root-text syllables (**4.**) are also positioned at similar locations inside all sections of the text, making it easier for human quality control to be conducted. In order to minimize false-positives, root-text syllable detection should not be applied to sapches (**1.**), neither to citations (**2.**). Root-text citations (**3.**) being independent of the actual commentary of each word of the root text, they are false positives that should be avoided when detecting root-text syllables.
-- paragraph segmentation (**5.**) should be applied only where there is actual commentary, not in segments containing only structural segments (sapches 1.) and citation segments (**2.** and **3.**). Furthermore, the presence of root text syllables (**4.**) in a given passage shows it constitutes a meaningful unit, and because of that, paragraph boundaries should be searched for after the end of root-text syllables.
+- paragraph segmentation (**5.**) should be applied only where there is actual commentary, not in segments containing only structural segments (sapches **1.**) and citation segments (**2.** and **3.**). Furthermore, the presence of root text syllables (**4.**) in a given passage shows it constitutes a meaningful unit, and because of that, paragraph boundaries should be searched for after the end of root-text syllables.
 - sapche tree structure creation (**6.**) is a step that (still) can't be performed automatically because of its complexity. Because of that, the more information visually provided to the human annotator, the better and faster he will be able to perform this task. This is why this annotation pipe is left at the very end of the pipeline.
 
 #### Statuses of Texts Traversing the Pipeline
 
-1. Texts will undergo a completely automatic annotation before the initial publication.
-2. Human annotators then check the output of each pipe, modifying and improving the annotations where necessary. Every pipe is validated by a human annotator.
-3. After the human validation of each annotation pipe, the text traverses the subsequent pipes automatically, in order to leverage the improvements.
-4. A status for each text is provided to Pecha to notify the users that the text they are reading has not been fully prepared. The initial status is "automatic pipeline completed", which will then be complemented to include the human-validated pipes.
+Texts published in Pecha.org are published before the full preparation is completed. Thus, texts carry a status informing the reader how many of the pipes have received human quality control. It is only once it has been thoroughly processed that Pecha.org can say the text corresponds to its quality expectations. 
+
+A text may be in either of the following states:
+
+- `automatic-processing`: a text is published once it has undergone the whole automatic pipeline, before any human quality control has happened.
+
+- `automatic-processing + <names-of-human-QCed-pipes>`: intermediate statuses that show what has been done and what remains to be done.
+
+- status is removed when it is fully prepared and fulfills the quality requirements of Pecha.org.
