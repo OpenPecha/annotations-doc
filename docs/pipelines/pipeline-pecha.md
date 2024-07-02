@@ -42,7 +42,7 @@ Texts can be of three types:
 
 ### Output: 
 
-TBD, but most probably a `.json` file per text containing all the annotations in a format that can be ingested by Pecha's db.
+TBD, but most probably a file format that can be shared with other project tackling similar issues, and that can be easily parsed into a `.json` file that can be ingested by Pecha's db.
 
 ## Overall Pipeline Description
 
