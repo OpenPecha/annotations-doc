@@ -1,6 +1,8 @@
 
 - [Overview](README.md)
-- [Getting started](getting-started.md)
+- [Pipelines](pipelines-index.md)
+- [Pipes Index](pipes-index.md)
+<!-- [Getting started](getting-started.md)
 - [Reference](reference.md)
-- [Help](help.md)
+- [Help](help.md) -->
 - [License](LICENSE.md)

@@ -7,26 +7,14 @@
 
 <!-- Replace with 1-sentence description about what this tool is or does.-->
 
-<h3 align="center">Use this repo template for all new Python projects.</h3>
+<h3 align="center">Documentation of Annotation Pipelines.</h3>
 
 ## Description
 
-Project description goes here.
+Read the docs [here](https://dev.openpecha.org/annotations-doc/#/)
 
 ## Project owner(s)
 
 <!-- Link to the repo owners' github profiles -->
 
-- [@10zinten](https://github.com/10zinten)
-- [@evanyerburgh](https://github.com/evanyerburgh)
-
-## Integrations
-
-<!-- Add any intregrations here or delete `- []()` and write None-->
-
-None
-## Docs
-
-<!-- Update the link to the docs -->
-
-Read the docs [here](https://wiki.openpecha.org/#/dev/coding-guidelines).
+- [@drupchen](https://github.com/drupchen)
