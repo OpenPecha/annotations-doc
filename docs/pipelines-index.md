@@ -1,4 +1,5 @@
+## [Pipeline Template](pipelines/pipeline-template.md)
+Documents what is a pipeline
 
-## [Pecha Data Preparation Pipeline](pipelines/pipeline-pecha.md)
-
+## [Pecha Data Preparation Pipeline](pipelines/pecha-pipeline.md)
 Documents the pipeline implemented to prepare the data for [Pecha](https://www.pecha.org).
