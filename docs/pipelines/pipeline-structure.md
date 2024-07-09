@@ -1,36 +1,36 @@
 # Pipeline Metadata
 
-## List of Input Texts
+### 1. List of Input Texts
 
 To discuss: either put files in a different location, or adopt a naming convention to filter out files belonging to other pipelines
 
-## Input Text Packages
+### 2. Input Text Packages
 
 A text package to run through the pipeline should contain:
 - raw .txt file: raw tibetan text
 - metadata of that text: table containing author, titles, etc.
 
-## State of Texts in the Pipeline
+### 3. State of Texts in the Pipeline
 
 The pipeline should know how far each individual text has gone, and what is the next step.
 
-## Ordered List of Pipes
+### 4. Ordered List of Pipes
 
 - list of pipes: names of all the pipes that need to be traversed, in the correct order.
 - optionality status of each pipe: state if traversing the pipeline can be continued if pipe is not completed.
 
-## Execution Mode
+### 5. Execution Mode
 
 2 modes:
 - automatic: runs all steps not requiring manual processing
 - manual: when a manual processing is required, runs preprocessing of pipe. in next execution of manager, if the flag of completion is True, executes postprocessing of pipe and resumes pipeline traversal.
 
-# Preprocessing (parse text package into OPF)
+# A. Preprocessing (parse text package into OPF)
 
 1. parse + normalize raw text (normalize spaces, punctuation and linebreaks).
 2. parse metadata file.
 
-# Traversing Pipeline
+# B. Traversing Pipeline
 
 The pipeline manager loops over all texts and does the following to each one:
 - checks the state of each text and moves to the corresponding pipe
@@ -52,7 +52,7 @@ The pipeline manager loops over all texts and does the following to each one:
     
 - produces/updates status report (in Google Spreadsheet) of all the texts
 
-# Postprocessing
+# C. Postprocessing
 
 Is executed when a text has traversed the pipeline and has not exited due to a non-optional pipe not being completed.
 This happens in 3 situations: 
