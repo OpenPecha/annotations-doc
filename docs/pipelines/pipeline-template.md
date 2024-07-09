@@ -1,46 +1,68 @@
 # Pipeline Metadata
 
-## List of input files
+## List of Input Texts
 
 To discuss: either put files in a different location, or adopt a naming convention to filter out files belonging to other pipelines
 
-## input package
+## Input Text Packages
 
 A text package to run through the pipeline should contain:
-- raw .txt file: text can be either on one or more lines.
+- raw .txt file: raw tibetan text
 - metadata of that text: table containing author, titles, etc.
 
-## State for each text going through the pipeline
+## State of Texts in the Pipeline
 
 The pipeline should know how far each individual text has gone, and what is the next step.
 
-## Ordered list of Pipes
+## Ordered List of Pipes
 
+- list of pipes: names of all the pipes that need to be traversed, in the correct order.
+- optionality status of each pipe: state if traversing the pipeline can be continued if pipe is not completed.
 
+## Execution Mode
 
-# Preprocessing
+2 modes:
+- automatic: runs all steps not requiring manual processing
+- manual: when a manual processing is required, runs preprocessing of pipe. in next execution of manager, if the flag of completion is True, executes postprocessing of pipe and resumes pipeline traversal.
 
-1. parse text package into .opf file
+# Preprocessing (parse text package into OPF)
+
+1. parse + normalize raw text (normalize spaces, punctuation and linebreaks).
+2. parse metadata file.
 
 # Traversing Pipeline
 
-each time the pipeline manager is executed, it
+The pipeline manager loops over all texts and does the following to each one:
 - checks the state of each text and moves to the corresponding pipe
-- runs pipe
+
+- advances in the pipeline
+  - if mode == automatic:
+    - all manual steps are bypassed
+      - manual-only steps are avoided altogether
+      - exits pipeline when a non-optional pipe is not completed
+  - if mode == manual:
+    - all the automatic pipes not yet completed are executed
+      - when encountering a manual step that is not yet completed, 
+        - run pipe preprocessing (produce the human-readable file)
+        - updates state of text
+        - exits
+      - when encountering a manual step that has been completed,
+        - run pipe post-processing (generate annotation layer)
+        - rerun all subsequent automatic pipes
+    
 - produces/updates status report (in Google Spreadsheet) of all the texts
 
 # Postprocessing
 
-when a text has gone
+Is executed when a text has traversed the pipeline and has not exited due to a non-optional pipe not being completed.
+This happens in 3 situations: 
+- execution mode is automatic and no manual steps have been run.
+- one or more manual steps have been completed and the subsequent automatic pipes have been rerun.
+- all the manual steps have been completed and the pipeline is completed for this text
 
+At this point, the output file is produced.
 
-A structure that allows a text to undergo one or more processing pipes, each generating an annotation layer that is stored in the .opf file.
-
-The processing of each pipe can be conducted manually, automatically, or a combination of both.
-
-A pipe may require as input the output of other pipes.
-
-A pipe will take as input a list of sub-strings of the base-text found in the .opf file. This will allow to skip the passages in the base text to which the current processing should not be applied. For example, in the pipe detecting the interspersed syllables of the root text in the commentary, the passages containing the root text citations should be avoided to correctly identify the first occurence of each root-text syllable in the commentary.
-
-When a pipe is rerun or manually corrected, all the subsequent pipes should be rerun and the updated annotation layers for each one should be produced.
-
+In order to allow smooth data sharing between similar projects and adoption of pipeline:
+- The output file format should be a compromise between being human-readable and machine-parsable.
+- Any formatting or information not strictly related to the pipeline and the annotations should be avoided.
+- Annotation tags such as "<root-text>xxxx</root-text>" should be fully written, to maximize readability.
