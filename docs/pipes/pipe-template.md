@@ -7,7 +7,7 @@
 3. automatic followed by manual processing
 
 Notes: 
-- for type 3, the pipeline should tell the pipe which processing should be applied.
+- for type 3, the pipeline should tell the pipe which one should be executed next.
 - for manual processing, pipe should have a flag/argument indicating that manual processing is completed and that Post-processing should be run
 
 ### 2. Pipe Dependency
@@ -18,6 +18,10 @@ is constituted of:
 - list of dependencies. The pipes that must be completed before pipe is allowed to be executed.
 
 ### 3. Spans of input on which pipe should be run
+
+1. annotated portions should be avoided in subsequent pipes: (`True` or `False`)
+2. portions of input to be avoided: (`[(start_idx, end_idx), (..., ...)]`). 
+   provided by the pipeline manager.
 
 Pipe should contain the information of which portions of the input data should undergo the processing. 
 This information can be used differently depending on whether the processing is automatic or manual: either to provide the chunks of text to avoid for automatic steps, or to highlight the chunks not needing manual processing.
@@ -32,6 +36,7 @@ This will allow to skip the passages in the base text to which the current proce
 # B. Processing
 
 if automatic, run input data through processing function, store output and set flag to "True"
+
 if manual, human performs processing, then manually sets flag to "True" to indicate processing is complete
 
 # C. Postprocessing (generate annotation layer)

@@ -14,12 +14,18 @@ A text package to run through the pipeline should contain:
 
 The pipeline should know how far each individual text has gone, and what is the next step.
 
-### 4. Ordered List of Pipes
+### 4. portions of base-text to be avoided
+
+Some pipes will say that some parts of the base-text should be avoided by the processing of subsequent pipes. This information should be stored.
+
+When a pipe is to be executed, the pipeline manager should add up all the passages to avoid returned by all the previous pipes, merge it into a single list and give it as argument to the pipe.
+
+### 5. Ordered List of Pipes
 
 - list of pipes: names of all the pipes that need to be traversed, in the correct order.
 - optionality status of each pipe: state if traversing the pipeline can be continued if pipe is not completed.
 
-### 5. Execution Mode
+### 6. Execution Mode
 
 2 modes:
 - automatic: runs all steps not requiring manual processing
