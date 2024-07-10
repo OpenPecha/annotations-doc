@@ -19,14 +19,18 @@ is constituted of:
 
 ### 3. Spans of input on which pipe should be run
 
-1. annotated portions should be avoided in subsequent pipes: (`True` or `False`)
-2. portions of input to be avoided: (`[(start_idx, end_idx), (..., ...)]`). 
+portions of input to be avoided: (`[(start_idx, end_idx), (..., ...)]`). 
    provided by the pipeline manager.
 
 Pipe should contain the information of which portions of the input data should undergo the processing. 
 This information can be used differently depending on whether the processing is automatic or manual: either to provide the chunks of text to avoid for automatic steps, or to highlight the chunks not needing manual processing.
 
 This will allow to skip the passages in the base text to which the current processing should not be applied. For example, in the pipe detecting the interspersed syllables of the root text in the commentary, the passages containing the root text citations should be avoided to correctly identify the first occurence of each root-text syllable in the commentary.
+
+### 4. Subsequent pipes should avoid tagged passages
+
+Pipe should tell to pipeline if the tagged substrings of input should be avoided by subsequent pipes or not.
+value is `True` or `False`
 
 # A. Preprocessing (generate view)
 

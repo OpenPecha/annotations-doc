@@ -10,10 +10,11 @@ value: `None`
 
 ### 3. Spans of input on which pipe should be run
 
-1. subsequent_should_avoid value: True
-2. avoid_list value: 
-value: `everything`
-(list containing one element spanning from beginning to end of base-text)
+value: (given by pipeline manager)
+
+### 4. Subsequent pipes should avoid tagged passages
+
+value: True
 
 # A. Preprocessing (generate view)
 
